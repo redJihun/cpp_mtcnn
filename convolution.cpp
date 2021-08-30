@@ -1,44 +1,50 @@
-#include <opencv2/core/base.hpp>
-#include <opencv2/core/mat.hpp>
-
+#include <vector>
 #include <cstdio>
 
 namespace Conv2D {
-    cv::Mat_<float> forward(const cv::Mat_<float>& src, const cv::Mat_<float>& kernel, const int& stride, const int& padding){
-        int k_center_x = kernel.cols / 2;
-        int k_center_y = kernel.rows / 2;
+    float forward(const std::vector<std::vector<float>>& src, const std::vector<std::vector<float>>& kernel, const int& stride, const int& padding){
+        int s_rows = src.size() / src[0].size();
+        int s_cols = src[0].size() / sizeof(float);
+        int k_rows = kernel.size() / kernel[0].size();
+        int k_cols = kernel[0].size() / sizeof(float);
 
-        for(int i=0; i<src.rows; ++i){                      // rows
-            for(int j=0; j<src.cols; ++j){                  // columns
-                for(int m=0; m<kernel.rows; ++m){           // kernel rows
-                    int mm = kernel.rows - 1 -m;            // row index of flipped kernel
-                    for(int n=0; n<kernel.cols; ++n){       // kernel columns
-                        int nn = kernel.cols - 1 - n;       // column index of flipped kernel
+        int k_center_y = k_rows / 2;
+        int k_center_x = k_cols / 2;
+
+        for(int i=0; i<s_rows; ++i){                      // rows
+
+            for(int j=0; j<s_cols; ++j){                  // columns
+
+                for(int m=0; m<k_rows; ++m){           // kernel rows
+                    int mm = k_rows - 1 -m;            // row index of flipped kernel
+
+                    for(int n=0; n<k_cols; ++n){       // kernel columns
+                        int nn = k_cols - 1 - n;       // column index of flipped kernel
 
                         // index of input signal, used for checking boundary
                         int ii = i + (k_center_y - mm);
                         int jj = j + (k_center_x - nn);
 
                         // ignore input samples which are out of bound
-                        if(ii>=0 && ii<src.rows && jj>=0 && jj<src.cols)
+                        if(ii>=0 && ii<s_rows && jj>=0 && jj<s_cols)
                             out[i][j] = in[ii][jj] * kernel[mm][nn];
                     }
                 }
             }
         }
 
-        printf(out)
+        printf(out);
     }
 
 }
 
 // double input[][3] = {{1, 2, 3}, {4, 5, 6}, {7, 8, 9}};
 
-// cv::Mat_<float> spatialConvolution(const cv::Mat_<float> &src,
-//                                    const cv::Mat_<float> &kernel) {
+// <float> spatialConvolution(const <float> &src,
+//                                    const <float> &kernel) {
 //   cv::Mat dst(src.rows, src.cols, src.type());
 
-//   cv::Mat_<float> flipped_kernel;
+//   <float> flipped_kernel;
 //   cv::flip(kernel, flipped_kernel, -1);
 
 //   const int dx = kernel.cols / 2;
