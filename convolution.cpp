@@ -3,8 +3,9 @@
 
 double input[][3] = {{1, 2, 3}, {4, 5, 6}, {7, 8, 9}};
 
-cv::Mat_<float> conv2D(){
-    
+cv::Mat_<float> conv2D(src, kernal, stride, padding){
+
+    return 
 }
 
 cv::Mat_<float> spatialConvolution(const cv::Mat_<float> &src,
