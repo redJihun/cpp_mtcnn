@@ -1,7 +1,9 @@
 #include <vector>
 #include <cstdio>
 
-namespace Conv2D {
+#include "Convolution2D.h"
+
+namespace Convolution2D {
     float forward(const std::vector<std::vector<float>>& src, const std::vector<std::vector<float>>& kernel, const int& stride, const int& padding){
         int s_rows = src.size() / src[0].size();
         int s_cols = src[0].size() / sizeof(float);
@@ -11,7 +13,7 @@ namespace Conv2D {
         int k_center_y = k_rows / 2;
         int k_center_x = k_cols / 2;
 
-        for(int i=0; i<s_rows; ++i){                      // rows
+        for(int i_src=-padding, i_out=0; i_src<s_rows+padding+1; i_src+=stride, i_out++){                      // rows
 
             for(int j=0; j<s_cols; ++j){                  // columns
                 T sum = (T)0;
@@ -28,7 +30,9 @@ namespace Conv2D {
 
                         // ignore input samples which are out of bound
                         if(ii>=0 && ii<s_rows && jj>=0 && jj<s_cols)
-                            out[i][j] = in[ii][jj] * kernel[mm][nn];
+                            float out = in[ii][jj] * kernel[mm][nn];
+                            sum += out
+                            output_image[i][j] = sum
                     }
                 }
             }
