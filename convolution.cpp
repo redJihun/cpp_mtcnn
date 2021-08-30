@@ -14,6 +14,7 @@ namespace Conv2D {
         for(int i=0; i<s_rows; ++i){                      // rows
 
             for(int j=0; j<s_cols; ++j){                  // columns
+                T sum = (T)0;
 
                 for(int m=0; m<k_rows; ++m){           // kernel rows
                     int mm = k_rows - 1 -m;            // row index of flipped kernel
