@@ -4,6 +4,10 @@
 #include "Convolution2D.h"
 
 namespace Convolution2D {
+    int getOutputRes(const int &width_in, const int &width_filter, const int &stride, const int &padding){
+        return (width_in - width_filter + 2 * padding) / stride + 1;
+    }
+
     float forward(const std::vector<std::vector<float>>& src, const std::vector<std::vector<float>>& kernel, const int& stride, const int& padding){
         int s_rows = src.size() / src[0].size();
         int s_cols = src[0].size() / sizeof(float);
@@ -15,7 +19,7 @@ namespace Convolution2D {
 
         for(int i_src=-padding, i_out=0; i_src<s_rows+padding+1; i_src+=stride, i_out++){                      // rows
 
-            for(int j=0; j<s_cols; ++j){                  // columns
+            for(int j_src=-padding, j_out0; j_src<s_cols+padding; ++j){                  // columns
                 T sum = (T)0;
 
                 for(int m=0; m<k_rows; ++m){           // kernel rows
