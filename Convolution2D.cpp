@@ -1,6 +1,7 @@
 #include <algorithm>
 #include <cstdio>
 #include <vector>
+#include <iostream>
 
 #include "Convolution2D.h"
 
@@ -47,7 +48,12 @@ float forward(const std::vector<std::vector<float>> &src,
     }
   }
 
-  std::printf(output_image.);
+  for(int i=0; i<output_image.size(); i++){
+      for(int j=0; j<output_image[i].size(); j++){
+          std::cout << output_image[i][j];
+      }
+      std::cout << std::endl;
+  }
 }
 
 } // namespace Convolution2D
