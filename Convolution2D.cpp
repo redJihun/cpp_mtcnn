@@ -1,51 +1,56 @@
-#include <vector>
+#include <algorithm>
 #include <cstdio>
+#include <vector>
 
 #include "Convolution2D.h"
 
 namespace Convolution2D {
-    int getOutputRes(const int &width_in, const int &width_filter, const int &stride, const int &padding){
-        return (width_in - width_filter + 2 * padding) / stride + 1;
-    }
+int getOutputRes(const int &width_in, const int &width_filter,
+                 const int &stride, const int &padding) {
+  return (width_in - width_filter + 2 * padding) / stride + 1;
+}
 
-    float forward(const std::vector<std::vector<float>>& src, const std::vector<std::vector<float>>& kernel, const int& stride, const int& padding){
-        int s_rows = src.size() / src[0].size();
-        int s_cols = src[0].size() / sizeof(float);
-        int k_rows = kernel.size() / kernel[0].size();
-        int k_cols = kernel[0].size() / sizeof(float);
+float forward(const std::vector<std::vector<float>> &src,
+              const std::vector<std::vector<float>> &kernel, const int &stride,
+              const int &padding) {
+  int s_rows = src.size() / src[0].size();
+  int s_cols = src[0].size() / sizeof(float);
+  int k_rows = kernel.size() / kernel[0].size();
+  int k_cols = kernel[0].size() / sizeof(float);
+  int h_out_res = getOutputRes(s_rows, k_rows, stride, padding);
+  int w_out_res = getOutputRes(s_cols, k_cols, stride, padding);
 
-        int k_center_y = k_rows / 2;
-        int k_center_x = k_cols / 2;
+  std::vector<std::vector<float>> output_image(h_out_res, std::vector<float> (w_out_res, 0));
 
-        for(int i_src=-padding, i_out=0; i_src<s_rows+padding+1; i_src+=stride, i_out++){                      // rows
+  for (int i_src = -padding, i_out = 0;
+       i_src < s_rows + padding - h_out_res + 1;
+       i_src += stride, i_out++) { // rows
 
-            for(int j_src=-padding, j_out0; j_src<s_cols+padding; ++j){                  // columns
-                T sum = (T)0;
+    for (int j_src = -padding, j_out = 0;
+         j_src < s_cols + padding - w_out_res + 1;
+         j_src += stride, j_out++) { // columns
+      T sum = (T)0;
 
-                for(int m=0; m<k_rows; ++m){           // kernel rows
-                    int mm = k_rows - 1 -m;            // row index of flipped kernel
+      for (int i_kernel = 0, i_in = i_src; i_kernel < h_out_res;
+           i_kernel++, i_in++) { // kernel rows
 
-                    for(int n=0; n<k_cols; ++n){       // kernel columns
-                        int nn = k_cols - 1 - n;       // column index of flipped kernel
+        for (int j_kernel = 0, j_in = j_src; j_kernel < w_out_res;
+             j_kernel++, j_in++) { // kernel columns
 
-                        // index of input signal, used for checking boundary
-                        int ii = i + (k_center_y - mm);
-                        int jj = j + (k_center_x - nn);
-
-                        // ignore input samples which are out of bound
-                        if(ii>=0 && ii<s_rows && jj>=0 && jj<s_cols)
-                            float out = in[ii][jj] * kernel[mm][nn];
-                            sum += out
-                            output_image[i][j] = sum
-                    }
-                }
-            }
+          // ignore input samples which are out of bound
+          if (i_in >= 0 && i_in < s_rows && j_in >= 0 && j_in < s_cols)
+            sum += src[i_in][j_in] * kernel[i_kernel][j_kernel];
         }
 
-        printf(out);
+        output_image[i_out][j_out] = sum;
+      }
     }
+  }
 
+  std::printf(output_image.);
 }
+
+} // namespace Convolution2D
 
 // double input[][3] = {{1, 2, 3}, {4, 5, 6}, {7, 8, 9}};
 
