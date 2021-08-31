@@ -1,7 +1,7 @@
 #include <algorithm>
 #include <cstdio>
-#include <vector>
 #include <iostream>
+#include <vector>
 
 #include "Convolution2D.h"
 
@@ -21,7 +21,8 @@ float forward(const std::vector<std::vector<float>> &src,
   int h_out_res = getOutputRes(s_rows, k_rows, stride, padding);
   int w_out_res = getOutputRes(s_cols, k_cols, stride, padding);
 
-  std::vector<std::vector<float>> output_image(h_out_res, std::vector<float> (w_out_res, 0));
+  std::vector<std::vector<float>> output_image(
+      h_out_res, std::vector<float>(w_out_res, 0));
 
   for (int i_src = -padding, i_out = 0;
        i_src < s_rows + padding - h_out_res + 1;
@@ -48,11 +49,11 @@ float forward(const std::vector<std::vector<float>> &src,
     }
   }
 
-  for(int i=0; i<output_image.size(); i++){
-      for(int j=0; j<output_image[i].size(); j++){
-          std::cout << output_image[i][j];
-      }
-      std::cout << std::endl;
+  for (int i = 0; i < output_image.size(); i++) {
+    for (int j = 0; j < output_image[i].size(); j++) {
+      std::cout << output_image[i][j];
+    }
+    std::cout << std::endl;
   }
 }
 
