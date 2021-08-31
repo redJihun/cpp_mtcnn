@@ -1,19 +1,17 @@
-#include <algorithm>
-#include <cstdio>
 #include <iostream>
 #include <vector>
 
 #include "Convolution2D.h"
 
 namespace Convolution2D {
-int getOutputRes(const int &width_in, const int &width_filter,
-                 const int &stride, const int &padding) {
+int getOutputRes(const int width_in, const int width_filter,
+                 const int stride, const int padding) {
   return (width_in - width_filter + 2 * padding) / stride + 1;
 }
 
-float forward(const std::vector<std::vector<float>> &src,
-              const std::vector<std::vector<float>> &kernel, const int &stride,
-              const int &padding) {
+std::vector<std::vector<float>> forward(const std::vector<std::vector<float>> src,
+              const std::vector<std::vector<float>> kernel, const int stride,
+              const int padding) {
   int s_rows = src.size() / src[0].size();
   int s_cols = src[0].size() / sizeof(float);
   int k_rows = kernel.size() / kernel[0].size();
@@ -55,35 +53,16 @@ float forward(const std::vector<std::vector<float>> &src,
     }
     std::cout << std::endl;
   }
+
+  return output_image;
 }
 
 } // namespace Convolution2D
 
-// double input[][3] = {{1, 2, 3}, {4, 5, 6}, {7, 8, 9}};
+int main(int argc, const char** argv) {
+    
+  std::vector<std::vector<float>> input(5, std::vector<float>(5, 1));
+  std::vector<std::vector<float>> kernel = {{-1, -1, -1}, {0, 0, 0}, {1, 1, 1}};
 
-// <float> spatialConvolution(const <float> &src,
-//                                    const <float> &kernel) {
-//   cv::Mat dst(src.rows, src.cols, src.type());
-
-//   <float> flipped_kernel;
-//   cv::flip(kernel, flipped_kernel, -1);
-
-//   const int dx = kernel.cols / 2;
-//   const int dy = kernel.rows / 2;
-
-//   for (int i = 0; i < src.rows; i++) {
-//     for (int j = 0; j < src.cols; j++) {
-//       float tmp = 0.0f;
-//       for (int k = 0; k < flipped_kernel.rows; k++) {
-//         for (int l = 0; l < flipped_kernel.cols; l++) {
-//           int x = j - dx + l;
-//           int y = i - dy + k;
-//           if (x >= 0 && x < src.cols && y >= 0 && y < src.rows)
-//             tmp += src.at<float>(y, x) * flipped_kernel.at<float>(k, l);
-//         }
-//       }
-//       dst.at<float>(i, j) = saturate_cast<float>(tmp);
-//     }
-//   }
-//   return dst.clone();
-// }
+  std::vector<std::vector<float>> output = Conv2D::forward(kernel, input, 1, 0);
+}
